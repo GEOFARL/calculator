@@ -1,0 +1,36 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #aaaaaa;
+}
+
+.main-container {
+    border: 4px solid black;
+    width: 358px;
+    height: 508px;
+    border-radius: 10px;
+    margin: 100px auto 0 auto;
+    background-color: #666666;
+}
+
+.field-container {
+    background-color: white;
+    border-radius: 10px;
+    height: 139px;
+    width: 336px;
+    border: 2px solid black;
+    margin: 7px;
+}
+
+.buttons-container {
+    border-radius: 10px;
+    height: 340px;
+    width: 336px;
+    border: 2px solid black;
+    margin: 7px;
+    background-color: #333333;
+}
