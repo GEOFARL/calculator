@@ -18,7 +18,7 @@ body {
 }
 
 .field-container {
-    background-color: white;
+    background-color: hwb(0 100% 10%);
     border-radius: 10px;
     height: 139px;
     width: 336px;
@@ -47,16 +47,45 @@ button {
     border-radius: 50%;
     background-color: white;
     border: none;
+    color: white;
+    transition: .3s;
 }
 
 .else {
     background-color: #cccccc;
+    font-size: 1.2rem;
+    color: black;
 }
 
 .operator {
     background-color: orange;
+    font-size: 1.8rem;
 }
 
 .digit {
     background-color: #666666;
+    font-size: 1.4rem;
+}
+
+.zero {
+    width: 128px;
+    border-radius: 35px;
+    text-align: left;
+    padding: 0 22px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.else:hover {
+    background-color: hwb(0 100% 5%);
+}
+
+.operator:hover {
+    background-color: hwb(39 40% 0%);
+}
+
+.digit:hover {
+    background-color: hwb(0 70% 60%);
 }
