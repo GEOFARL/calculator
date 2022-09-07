@@ -46,4 +46,17 @@ button {
     height: 55px;
     border-radius: 50%;
     background-color: white;
+    border: none;
+}
+
+.else {
+    background-color: #cccccc;
+}
+
+.operator {
+    background-color: orange;
+}
+
+.digit {
+    background-color: #666666;
 }
