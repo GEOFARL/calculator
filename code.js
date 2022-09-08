@@ -10,6 +10,7 @@ const inputField = document.querySelector('.input-container');
 const logField = document.querySelector('.log');
 const allClearBtn = document.querySelector('button.else');
 const clearEntryBtn = document.querySelector('button.clear');
+const plusMinusBtn = document.querySelector('button.minus');
 
 
 
@@ -38,6 +39,8 @@ historyBtnOff.addEventListener('click', hideHistory);
 allClearBtn.addEventListener('click', clearAll);
 
 clearEntryBtn.addEventListener('click', clearEntry);
+
+plusMinusBtn.addEventListener('click', togglePlusMinus);
 
 
 
@@ -85,9 +88,15 @@ function addDigit(e) {
         inputField.innerText = '';
         inputField.innerText += e.target.innerText;
     }
-    else {
+    else if (!isZero() && !(logField.innerText !== '' && !haveOperatorBetween())) {
         if (isPreviousOperator()) {
-            inputField.innerText += ` ${e.target.innerText}`;
+            if (toggled) {
+                inputField.innerText += `${e.target.innerText}`;
+                toggled = false;
+            }
+            else {
+                inputField.innerText += ` ${e.target.innerText}`;
+            }
         }
         else if (isInNumberRange() && isInDecimalPortionRange()) {
             inputField.innerText += e.target.innerText;
@@ -251,6 +260,38 @@ function clearEntry() {
         }
         else if (characters[characters.length - 1] === ' ') {
             inputField.innerText = characters.splice(0, characters.length - 3).join('');
+        }
+    }
+}
+
+let toggled = false;
+function togglePlusMinus() {
+    let characters = [...inputField.innerText];
+    if (!isZero() && !(logField.innerText !== '' && !haveOperatorBetween())) {
+        if (haveOperatorBetween()) {
+            let indexOfSpace = characters.indexOf(' ');
+            if (characters[indexOfSpace + 2] === undefined) {
+                inputField.innerText += ' -';
+                toggled = true;
+            }
+            else if (characters[indexOfSpace + 3] === '-') {
+                characters.splice((indexOfSpace + 3), 1);
+                inputField.innerText = characters.join('');
+            }
+            else {
+                characters.splice(indexOfSpace + 3, 0, '-');
+                inputField.innerText = characters.join('');
+            }
+        }
+        else {
+            if (!(characters[0] === '-')) {
+                characters.unshift('-');
+                inputField.innerText = characters.join('');
+            }
+            else {
+                characters.splice(0, 1);
+                inputField.innerText = characters.join('');
+            }
         }
     }
 }
