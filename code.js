@@ -3,6 +3,7 @@
 const historyBtnOn = document.querySelector('.history-button-on');
 const historyBtnOff = document.querySelector('.history-button-off');
 const historyWindow = document.querySelector('.history-container');
+const allBtns = document.querySelectorAll('button');
 const digitBtns = document.querySelectorAll('button.digit');
 const operatorBtns = document.querySelectorAll('button.operator');
 const inputField = document.querySelector('.input-container');
@@ -25,28 +26,11 @@ historyBtnOn.addEventListener('click', showHistory);
 historyBtnOff.addEventListener('click', hideHistory);
 
 [...digitBtns].forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        if (isDot(e)) addDot();
-        else addDigit(e);
-    })
+    btn.addEventListener('click', addDigitDot);
 });
 
 [...operatorBtns].forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        if (!isZero()) {
-            if (haveOperatorBetween()) {
-                if (isLastNumber()) {
-                    logField.innerText = inputField.innerText;
-                    inputField.innerText = calculate().toString() + ` ${e.target.innerText} `;
-                }
-            }
-            else {
-                if (!isPreviousOperator()) {
-                    inputField.innerText += ` ${e.target.innerText} `;
-                }
-            }
-        }
-    })
+    btn.addEventListener('click', addOperator);
 })
 
 
@@ -113,7 +97,6 @@ function isInNumberRange() {
         let startIndex = characters.lastIndexOf(" ") + 1;
         if (operators.includes(characters[startIndex])) return true;
         number = Number(characters.slice(startIndex).join(''));
-        console.log(number)
     }
     return number / Math.pow(10, 9) < 1;
 }
@@ -160,4 +143,73 @@ function isPreviousOperator() {
 function isLastNumber() {
     let characters = [...inputField.innerText];
     return isNaN(characters[characters.length - 1]) ? false : true;
+}
+
+function calculate() {
+    let characters = [...inputField.innerText];
+    let endOfFirstNumber = characters.indexOf(' ');
+    let startOfSecondNumber = characters.lastIndexOf(' ') + 1;
+    let firstNumber = Number(characters.slice(0, endOfFirstNumber).join(''));
+    let secondNumber = Number(characters.slice(startOfSecondNumber).join(''));
+    let indexOfOperator = endOfFirstNumber + 1;
+    let operatorCharacter = characters[indexOfOperator];
+    let operator;
+
+    operatorCharacter === '+' ? operator = '+'
+        : operatorCharacter === '-' ? operator = '-'
+            : operatorCharacter === '×' ? operator = '*'
+                : operator = '/';
+
+    if (secondNumber === 0 && operator === '/') return 'Error'
+
+    if (operator === '+') return firstNumber + secondNumber;
+    if (operator === '-') return firstNumber - secondNumber;
+    if (operator === '*') return firstNumber * secondNumber;
+    if (operator === '/') return (firstNumber / secondNumber).toFixed(5);
+}
+
+function addDigitDot(e) {
+    if (isDot(e)) addDot();
+    else addDigit(e);
+}
+
+function addOperator(e) {
+    if (!isZero()) {
+        if (haveOperatorBetween()) {
+            if (isLastNumber()) {
+                logField.innerText = inputField.innerText;
+                if (e.target.innerText === '=') {
+                    if (calculate() === 'Error') {
+                        inputField.innerText = 'Error';
+                        disableButtons();
+                    }
+                    else {
+                        inputField.innerText = String(calculate());
+                    }
+                }
+                else {
+                    if (calculate() === 'Error') {
+                        inputField.innerText = 'Error';
+                        disableButtons();
+                    }
+                    else {
+                        inputField.innerText = String(calculate()) + ` ${e.target.innerText} `;
+                    }
+                }
+            }
+        }
+        else {
+            if (!isPreviousOperator()) {
+                inputField.innerText += ` ${e.target.innerText} `;
+            }
+        }
+    }
+}
+
+function disableButtons() {
+    buttons = [...allBtns];
+    buttons.forEach(button => {
+        button.removeEventListener('click', addDigitDot);
+        button.removeEventListener('click', addOperator);
+    });
 }
