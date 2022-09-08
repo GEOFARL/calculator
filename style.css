@@ -127,8 +127,19 @@ button:hover {
     color: black;
     line-height: 1.3;
     font-size: 0.9rem;
+    display: none;
+}
+
+.history-button-on:hover,
+.history-button-off:hover {
+    cursor: pointer;
+    transform: scale(1.05);
 }
 
 .history-text {
     margin-top: 5px;
+}
+
+.history-button-off {
+    display: none;
 }
