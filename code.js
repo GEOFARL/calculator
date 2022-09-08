@@ -11,13 +11,16 @@ const logField = document.querySelector('.log');
 const allClearBtn = document.querySelector('button.else');
 const clearEntryBtn = document.querySelector('button.clear');
 const plusMinusBtn = document.querySelector('button.minus');
+const historyLog = document.querySelector('.history-text');
 
 
 
 
-//Constants
+//Variable
 
 const operators = ['+', '-', '×', '÷'];
+let toggled = false;
+let historyCount = 1;
 
 
 
@@ -202,7 +205,12 @@ function addOperator(e) {
                         disableButtons();
                     }
                     else {
-                        inputField.innerText = String(calculate());
+                        if (calculate() / Math.pow(10, 9) < 1) {
+                            inputField.innerText = String(calculate());
+                        }
+                        else {
+                            inputField.innerText = 'Error';
+                        }
                     }
                 }
                 else {
@@ -211,9 +219,22 @@ function addOperator(e) {
                         disableButtons();
                     }
                     else {
-                        inputField.innerText = String(calculate()) + ` ${e.target.innerText} `;
+                        if (calculate() / Math.pow(10, 9) < 1) {
+                            inputField.innerText = String(calculate()) + ` ${e.target.innerText} `;
+                        }
+                        else {
+                            inputField.innerText = 'Error';
+                        }
                     }
                 }
+                if (historyCount === 1) historyLog.innerText = '';
+                let inputText = [...inputField.innerText];
+                if ((isNaN(inputText[inputText.length - 1]) && (inputText[inputText.length - 1] !== 'r'))) {
+                    console.log('yeah')
+                    inputText.splice(inputText.length - 1, 2);
+                }
+                historyLog.innerHTML += `<div><span style="display: inline-flex; justify-content: center;align-items: center; font-weight: 900; border: 1px solid black; border-radius: 50%; padding: 2px 8px;">${historyCount}.</span>  ${logField.innerText} = ${inputText.join('')}</div>`;
+                historyCount++;
             }
         }
         else {
@@ -264,7 +285,6 @@ function clearEntry() {
     }
 }
 
-let toggled = false;
 function togglePlusMinus() {
     let characters = [...inputField.innerText];
     if (!isZero() && !(logField.innerText !== '' && !haveOperatorBetween())) {
