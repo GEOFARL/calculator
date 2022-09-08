@@ -8,6 +8,8 @@ const digitBtns = document.querySelectorAll('button.digit');
 const operatorBtns = document.querySelectorAll('button.operator');
 const inputField = document.querySelector('.input-container');
 const logField = document.querySelector('.log');
+const allClearBtn = document.querySelector('button.else');
+const clearEntryBtn = document.querySelector('button.clear');
 
 
 
@@ -33,6 +35,9 @@ historyBtnOff.addEventListener('click', hideHistory);
     btn.addEventListener('click', addOperator);
 })
 
+allClearBtn.addEventListener('click', clearAll);
+
+clearEntryBtn.addEventListener('click', clearEntry);
 
 
 
@@ -160,12 +165,16 @@ function calculate() {
             : operatorCharacter === '×' ? operator = '*'
                 : operator = '/';
 
+    let result;
     if (secondNumber === 0 && operator === '/') return 'Error'
 
-    if (operator === '+') return firstNumber + secondNumber;
-    if (operator === '-') return firstNumber - secondNumber;
-    if (operator === '*') return firstNumber * secondNumber;
-    if (operator === '/') return (firstNumber / secondNumber).toFixed(5);
+    if (operator === '+') result = firstNumber + secondNumber;
+    if (operator === '-') result = firstNumber - secondNumber;
+    if (operator === '*') result = firstNumber * secondNumber;
+    if (operator === '/') result = firstNumber / secondNumber;
+
+    if (Number.isInteger(result)) return result;
+    return parseFloat(result.toFixed(5));
 }
 
 function addDigitDot(e) {
@@ -199,7 +208,7 @@ function addOperator(e) {
             }
         }
         else {
-            if (!isPreviousOperator()) {
+            if (!isPreviousOperator() && e.target.innerText !== '=') {
                 inputField.innerText += ` ${e.target.innerText} `;
             }
         }
@@ -212,4 +221,36 @@ function disableButtons() {
         button.removeEventListener('click', addDigitDot);
         button.removeEventListener('click', addOperator);
     });
+}
+
+function clearAll() {
+    inputField.innerText = '0';
+    logField.innerText = '';
+    [...digitBtns].forEach(btn => {
+        btn.addEventListener('click', addDigitDot);
+    });
+
+    [...operatorBtns].forEach(btn => {
+        btn.addEventListener('click', addOperator);
+    });
+}
+
+function clearEntry() {
+    let characters = [...inputField.innerText];
+    if (!isZero() && !(logField.innerText !== '' && !haveOperatorBetween())) {
+        if (isLastNumber()) {
+            if (characters.length > 1) {
+                inputField.innerText = characters.splice(0, characters.length - 1).join('');
+            }
+            else {
+                inputField.innerText = '0';
+            }
+        }
+        else if (isPreviousOperator()) {
+            inputField.innerText = characters.splice(0, characters.length - 2).join('');
+        }
+        else if (characters[characters.length - 1] === ' ') {
+            inputField.innerText = characters.splice(0, characters.length - 3).join('');
+        }
+    }
 }
