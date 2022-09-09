@@ -18,7 +18,7 @@ const historyLog = document.querySelector('.history-text');
 
 //Variable
 
-const operators = ['+', '-', '×', '÷'];
+const operators = ['+', '-', '×', '÷', '*', '/'];
 let toggled = false;
 let historyCount = 1;
 
@@ -45,6 +45,12 @@ clearEntryBtn.addEventListener('click', clearEntry);
 
 plusMinusBtn.addEventListener('click', togglePlusMinus);
 
+//Keyboard support
+[...allBtns].forEach(btn => {
+    addEventListener('keydown', addKey);
+});;
+
+
 
 
 //Functions section
@@ -62,11 +68,11 @@ function hideHistory() {
 }
 
 function isDot(element) {
-    return element.target.innerText === ',' ? true : false;
+    return element.target.innerText === ',';
 }
 
 function isZero() {
-    return inputField.innerText === '0' ? true : false;
+    return inputField.innerText === '0';
 }
 
 function addDot() {
@@ -103,6 +109,27 @@ function addDigit(e) {
         }
         else if (isInNumberRange() && isInDecimalPortionRange()) {
             inputField.innerText += e.target.innerText;
+        }
+    }
+}
+
+function addDigitKeyboard(e) {
+    if (isZero()) {
+        inputField.innerText = '';
+        inputField.innerText += e.key;
+    }
+    else if (!isZero() && !(logField.innerText !== '' && !haveOperatorBetween())) {
+        if (isPreviousOperator()) {
+            if (toggled) {
+                inputField.innerText += `${e.key}`;
+                toggled = false;
+            }
+            else {
+                inputField.innerText += ` ${e.key}`;
+            }
+        }
+        else if (isInNumberRange() && isInDecimalPortionRange()) {
+            inputField.innerText += e.key;
         }
     }
 }
@@ -230,7 +257,6 @@ function addOperator(e) {
                 if (historyCount === 1) historyLog.innerText = '';
                 let inputText = [...inputField.innerText];
                 if ((isNaN(inputText[inputText.length - 1]) && (inputText[inputText.length - 1] !== 'r'))) {
-                    console.log('yeah')
                     inputText.splice(inputText.length - 1, 2);
                 }
                 historyLog.innerHTML += `<div><span style="display: inline-flex; justify-content: center;align-items: center; font-weight: 900; border: 1px solid black; border-radius: 50%; padding: 2px 8px;">${historyCount}.</span>  ${logField.innerText} = ${inputText.join('')}</div>`;
@@ -245,11 +271,72 @@ function addOperator(e) {
     }
 }
 
+function addOperatorKeyboard(e) {
+    if (!isZero()) {
+        if (haveOperatorBetween()) {
+            if (isLastNumber()) {
+                logField.innerText = inputField.innerText;
+                if (e.key === '=' || e.key === 'Enter') {
+                    if (calculate() === 'Error') {
+                        inputField.innerText = 'Error';
+                        disableButtons();
+                    }
+                    else {
+                        if (calculate() / Math.pow(10, 9) < 1) {
+                            inputField.innerText = String(calculate());
+                        }
+                        else {
+                            inputField.innerText = 'Error';
+                        }
+                    }
+                }
+                else {
+                    if (calculate() === 'Error') {
+                        inputField.innerText = 'Error';
+                        disableButtons();
+                    }
+                    else {
+                        if (calculate() / Math.pow(10, 9) < 1) {
+                            let operator = e.key;
+                            if (e.key === '*') operator = '×';
+                            if (e.key === '/') operator = '÷';
+                            inputField.innerText = String(calculate()) + ` ${operator} `;
+                        }
+                        else {
+                            inputField.innerText = 'Error';
+                        }
+                    }
+                }
+                if (historyCount === 1) historyLog.innerText = '';
+                let inputText = [...inputField.innerText];
+                if ((isNaN(inputText[inputText.length - 1]) && (inputText[inputText.length - 1] !== 'r'))) {
+                    inputText.splice(inputText.length - 1, 2);
+                }
+                historyLog.innerHTML += `<div><span style="display: inline-flex; justify-content: center;align-items: center; font-weight: 900; border: 1px solid black; border-radius: 50%; padding: 2px 8px;">${historyCount}.</span>  ${logField.innerText} = ${inputText.join('')}</div>`;
+                historyCount++;
+            }
+        }
+        else {
+            if (!isPreviousOperator() && e.key !== '=') {
+                if (inputField.innerText === 'Error') disableButtons();
+                else {
+                    let operator = e.key;
+                    if (e.key === '*') operator = '×';
+                    if (e.key === '/') operator = '÷';
+                    inputField.innerText += ` ${operator} `;
+                }
+            }
+        }
+    }
+}
+
 function disableButtons() {
     buttons = [...allBtns];
     buttons.forEach(button => {
         button.removeEventListener('click', addDigitDot);
         button.removeEventListener('click', addOperator);
+        button.removeEventListener('keypress', addDigitKeyboard);
+        button.removeEventListener('keypress', addOperatorKeyboard);
     });
 }
 
@@ -313,5 +400,26 @@ function togglePlusMinus() {
                 inputField.innerText = characters.join('');
             }
         }
+    }
+}
+
+function addKey(e) {
+    if (!isNaN(e.key)) {
+        addDigitKeyboard(e);
+    }
+    else if (e.key === '+' || e.key === '-' || e.key === '/' || e.key === '*' || e.key === '=' || e.key === 'Enter') {
+        addOperatorKeyboard(e);
+    }
+    else if (e.key === ',') {
+        addDot();
+    }
+    else if (e.key === '_') {
+        togglePlusMinus();
+    }
+    else if (e.key === 'c' || e.key === 'Backspace') {
+        clearEntry()
+    }
+    else if (e.key === 'C') {
+        clearAll();
     }
 }
