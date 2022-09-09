@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playball&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,6 +8,10 @@
 
 body {
     background-color: #aaaaaa;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
 }
 
 .main-container {
@@ -143,4 +149,22 @@ button:hover {
 
 .history-button-off {
     display: none;
+}
+
+.footer {
+    /* text-transform: uppercase; */
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 20px 0;
+    color: white;
+    background-color: #555555;
+    font-family: 'Playball', cursive;
+    ;
+}
+
+.name {
+    color: #555555;
+    background-color: white;
+    border-radius: 5px;
+    padding: 0 5px;
 }
