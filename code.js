@@ -56,6 +56,13 @@ plusMinusBtn.addEventListener('touchcancel', togglePlusMinus);
 });;
 
 
+//Keyboard support
+[...allBtns].forEach(btn => {
+    addEventListener('keydown', addKey);
+    // Practicing git commit --amend, nothing spacial 
+});;
+
+
 
 
 //Functions section
