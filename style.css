@@ -168,3 +168,66 @@ button:hover {
     border-radius: 5px;
     padding: 0 5px;
 }
+
+@media (max-width: 810px) {
+    .main-container {
+        border: 3px solid black;
+        width: 306px;
+        height: 435px;
+        border-radius: 8px;
+        margin: 60px auto 0 auto;
+    }
+
+    .field-container {
+        border-radius: 10px;
+        height: 120px;
+        width: 290px;
+        border: 2px solid black;
+        margin: 5px;
+    }
+
+    .buttons-container {
+        border-radius: 10px;
+        height: 300px;
+        width: 290px;
+        border: 2px solid black;
+        margin: 5px;
+        padding: 7px 20px;
+    }
+
+    button {
+        width: 50px;
+        height: 50px;
+    }
+
+    .else {
+        font-size: 1rem;
+    }
+
+    .operator {
+        font-size: 1rem;
+    }
+
+    .digit {
+        font-size: 1rem;
+    }
+
+    .log-container {
+        width: 290px;
+        height: 45px;
+    }
+
+    .input-container {
+        width: 290px;
+        height: 75px;
+        font-size: 1.8rem;
+    }
+
+    .history-container {
+        display: none;
+    }
+
+    .history-button-on {
+        display: none;
+    }
+}

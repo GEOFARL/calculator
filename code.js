@@ -33,17 +33,22 @@ historyBtnOff.addEventListener('click', hideHistory);
 
 [...digitBtns].forEach(btn => {
     btn.addEventListener('click', addDigitDot);
+    btn.addEventListener('touchcancel', addDigitDot);
 });
 
 [...operatorBtns].forEach(btn => {
     btn.addEventListener('click', addOperator);
+    btn.addEventListener('touchcancel', addOperator);
 })
 
 allClearBtn.addEventListener('click', clearAll);
+allClearBtn.addEventListener('touchcancel', clearAll);
 
 clearEntryBtn.addEventListener('click', clearEntry);
+clearEntryBtn.addEventListener('touchcancel', clearEntry);
 
 plusMinusBtn.addEventListener('click', togglePlusMinus);
+plusMinusBtn.addEventListener('touchcancel', togglePlusMinus);
 
 //Keyboard support
 [...allBtns].forEach(btn => {
